@@ -3,6 +3,7 @@ import * as http from 'http';
 import * as cors from 'cors';
 import { cryptonatorApiQueue } from './queues';
 import { getCoinController } from './controller';
+import { init as initWebSocket } from './ws';
 
 const NAME = 'EventX Cypto api';
 const PORT = 3001;
@@ -15,15 +16,19 @@ app.get('/coins', getCoinController);
 
 const server = new http.Server(app);
 
+const io = require('socket.io')(server, {
+  cors: '*'
+});
+initWebSocket(io);
+
+const cronOption = {
+  repeat: {
+    cron: '*/30 * * * * *'
+  }
+};
+cryptonatorApiQueue.add({}, cronOption);
+
 (async function () {
   await server.listen(PORT);
-
-  const cronOption = {
-    repeat: {
-      cron: '*/30 * * * * *'
-    }
-  };
-  await cryptonatorApiQueue.add({}, cronOption);
-
   console.log(`${ NAME } listening @ :${ PORT }`);
 }());

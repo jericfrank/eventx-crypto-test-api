@@ -1,0 +1,12 @@
+{
+  "db": {
+    "host": "localhost",
+    "user": "postgres",
+    "password": "",
+    "database": "eventx"
+  },
+  "queues": {
+    "redisUri": "redis://127.0.0.1"
+  },
+  "cryptoUri": "https://api.cryptonator.com/"
+}

@@ -1,5 +1,6 @@
 import db from './db';
 import { CoinPrice, CoinPricePayload } from './entities';
+import { pushLiveConversationUpdate } from './queues';
 
 export async function getCoins (): Promise<CoinPrice[]> {
   const coins = await db('coins')
@@ -26,4 +27,6 @@ export async function getCoins (): Promise<CoinPrice[]> {
 
 export async function bulkInsertCoin (coinPrices: CoinPricePayload[]): Promise<void> {
   await db('coin_prices').insert(coinPrices);
+  const coins = await getCoins();
+  pushLiveConversationUpdate(coins);
 }

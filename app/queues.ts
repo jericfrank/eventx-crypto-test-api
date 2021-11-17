@@ -1,20 +1,18 @@
 import * as Queue from 'bull';
 import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import db from './db';
-import { Coin, CoinPricePayload, CryptonatorRes } from './entities';
+import { Coin, CoinPrice, CoinPricePayload, CryptonatorRes } from './entities';
 import { bulkInsertCoin } from './features';
+import { CRYPTO_API_UPDATE, CRYPTO_URI, PUSH_COINS_UPDATE, REDIS_URI } from './constants';
 
-const redisURI = 'redis://127.0.0.1';
-
-export const cryptonatorApiQueue = new Queue('cryptonatorApiQueue', redisURI);
-
+export const cryptonatorApiQueue = new Queue(CRYPTO_API_UPDATE, REDIS_URI);
 cryptonatorApiQueue.process(async () => {
   const coins = await db('coins')
     .select('id', 'code', 'name')
     .orderBy('order', 'DESC');
 
   const getCoinPromises: AxiosPromise[] = coins.map(({ code }: Coin) => {
-    return axios.get(`https://api.cryptonator.com/api/ticker/${ code }`);
+    return axios.get(`${ CRYPTO_URI }/api/ticker/${ code }`);
   });
 
   Promise.all(getCoinPromises)
@@ -47,3 +45,8 @@ cryptonatorApiQueue.process(async () => {
       console.error(err);
     });
 });
+
+const pushCoinUpdateQueue = new Queue(PUSH_COINS_UPDATE, REDIS_URI);
+export async function pushLiveConversationUpdate (data: CoinPrice[]) {
+  pushCoinUpdateQueue.add(data);
+}
