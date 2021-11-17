@@ -1,9 +1,10 @@
+import * as config from 'config';
 const Knex = require('knex');
 
-const DB_HOST: string = 'localhost';
-const DB_USER: string = 'postgres';
-const DB_PASSWORD: string = '';
-const DB_DATABASE: string = 'eventx';
+const DB_HOST = config.get('db.host');
+const DB_DATABASE = config.get('db.database');
+const DB_USER = config.get('db.user');
+const DB_PASSWORD = config.get('db.password');
 
 const db = Knex({
   client: 'pg',
