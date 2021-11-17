@@ -1,5 +1,3 @@
-# eventx-crypto-test-api
-
 ## Installation
 In order to setup, run and start the app locally you just have to:
 
