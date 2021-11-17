@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist",
+    "allowJs": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "target": "esnext",
+    "lib": ["es2017", "dom"],
+    "resolveJsonModule": true,
+  },
+  "include": [
+    "./app/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
